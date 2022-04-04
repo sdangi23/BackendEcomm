@@ -27,7 +27,6 @@ module.exports = class Cart {
       );
       existingProductIndexLast = reverseArray.length-existingProductIndexLast-1;
 
-      console.log("first ==>" ,existingProductIndex, "last ==>" , existingProductIndexLast);
       let existingProduct = cart.products[existingProductIndex];
       let existingProductLast=0;
 
@@ -39,7 +38,7 @@ module.exports = class Cart {
       let updatedProduct;
       // Add new product/ increase quantity
       if(existingProductLast){
-        console.log("hi1");
+
         if(existingProduct.size == prodSize){
           updatedProduct = { ...existingProduct };
           updatedProduct.qty = updatedProduct.qty + 1;
@@ -51,7 +50,7 @@ module.exports = class Cart {
             updatedProduct.qty = updatedProduct.qty + 1;
             cart.products = [...cart.products];
             cart.products[existingProductIndexLast] = updatedProduct;
-            console.log("hi");
+
             }
       }
 

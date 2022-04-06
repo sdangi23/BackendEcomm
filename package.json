@@ -21,5 +21,13 @@
     "mysql2": "^2.3.3",
     "pug": "^2.0.3",
     "sequelize": "^6.18.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdangi23/BackendEcomm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sdangi23/BackendEcomm/issues"
+  },
+  "homepage": "https://github.com/sdangi23/BackendEcomm#readme"
 }

@@ -12,7 +12,12 @@ const User = require('./models/user');
 const Cart = require('./models/cart');
 const CartItem = require('./models/cart-item');
 
+var cors = require('cors');
+
+
 const app = express();
+
+app.use(cors());
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');

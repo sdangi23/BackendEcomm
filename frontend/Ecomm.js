@@ -2,6 +2,8 @@ const Ecommerce = document.getElementById("Ecommerce");
 
 const cart_items = document.querySelector('.cart_items');
 
+const pagenation=document.querySelector(".pagenation");
+
 Ecommerce.addEventListener( 'click' , (e) => {
 
     if(e.target.className == 'add-cart') {
@@ -25,11 +27,99 @@ Ecommerce.addEventListener( 'click' , (e) => {
                 document.querySelector('#total-value').innerText = `${cart_total.toFixed(2)}`
                 e.target.parentNode.parentNode.remove()
             }
+
+            if (e.target.className == "page"){
+                const reqpage=e.target.id;
+                axios
+                .get(`http://localhost:3000/products/?page=${reqpage}`).then((data)=>{
+                const products=data.data.products;
+                const pages=data.data.obj;
+                // console.log(products)
+                const container1=document.querySelector("#albums")
+                const pagenation=document.querySelector(".pagenation")
+                container1.innerHTML="";
+            
+                for(let i=0;i<products.length;i++){
+                    console.log(products[i].id);
+                    const id=products[i].id;
+                    const product = document.createElement('div');
+                    product.classList.add('product');
+                    product.setAttribute('id',products[i].title)
+                    const head=document.createElement('h3')
+                    head.innerText=`${products[i].title}`;
+                    product.appendChild(head)
+                    const imgdiv=document.createElement('div')
+                    imgdiv.classList.add('imagediv')
+                    imgdiv.setAttribute('id',id);
+                    const img=document.createElement('img')
+                    img.classList.add('prodimg');
+                    img.setAttribute('src',`${products[i].imageUrl}`)
+                    img.setAttribute('alt',`${products[i].title}`)
+                    imgdiv.appendChild(img)
+                    product.appendChild(imgdiv)
+                    const prodde=document.createElement('div')
+                    prodde.classList.add("productdetails")
+                    const pspa=document.createElement("span")
+                    pspa.innerText=products[i].price;
+                    prodde.appendChild(pspa)
+                    const btn=document.createElement("button")
+                    btn.classList.add("shopaddingbutton")
+                    btn.setAttribute('type',"button")
+                    btn.innerText="Add to cart"
+                    prodde.appendChild(btn)
+                    product.appendChild(prodde)
+                    container1.appendChild(product)
+                
+        
+                }
+                pagenation.innerHTML="";
+                if(pages.currentpage !=1 && pages.previouspage!=1){
+                    const newpg=document.createElement("a")
+                    newpg.setAttribute('id',`1`)
+                    newpg.setAttribute("class","page")
+                    newpg.innerText=`1`
+                    
+                    pagenation.appendChild(newpg);
+                }
+                if(pages.haspreviouspage ){
+                    const newpg2=document.createElement("a")
+                    newpg2.setAttribute("class","page")
+                    newpg2.setAttribute("id",`${pages.previouspage}`)
+                    newpg2.innerText=`${pages.previouspage}`
+                    pagenation.appendChild(newpg2);  }
+            
+                const newpg1=document.createElement("a")
+                newpg1.setAttribute("id",`${pages.currentpage}`)
+                console.log("rendering current page")
+                newpg1.setAttribute("class","page")
+                newpg1.innerText=`${pages.currentpage}`
+                pagenation.appendChild(newpg1);
+                
+            
+                if(pages.hasnextpage){
+                    const newpg3=document.createElement("a")
+                    newpg3.setAttribute("class","page")
+                    newpg3.setAttribute("id",`${pages.nextpage}`)
+                    newpg3.innerText=`${pages.nextpage}`
+                    pagenation.appendChild(newpg3);
+                }
+                if(pages.lastpage !== pages.currentpage && pages.nextpage!==pages.lastpage){
+                    const newpg4=document.createElement("a")
+                    newpg4.setAttribute("class","page")
+                    newpg4.setAttribute("id",`${pages.lastpage}`)
+                    newpg4.innerText=`${pages.lastpage}`
+                    pagenation.appendChild(newpg4);
+                }
+
+    
+                }).catch(err=>console.log(err))
+ 
+            }
     
 })
 
 window.addEventListener('DOMContentLoaded' , async () => {
-    const db = await axios.get('http://localhost:3000/products');
+    const db = await axios.get('http://localhost:3000/products/?page=1');
 
     const albums = document.getElementById('albums');
     let r=1;
@@ -51,7 +141,47 @@ window.addEventListener('DOMContentLoaded' , async () => {
     
     albums.appendChild(elem);
     }
+    console.log(db);
+    const pages = db.data.obj;
+    pagenation.innerHTML="";
+        if(pages.currentpage !=1 && previouspage!=1){
+            const newpg=document.createElement("a")
+            newpg.setAttribute('id',`1`)
+            newpg.setAttribute("class","page")
+            newpg.innerText=`1`
+            
+            pagenation.appendChild(newpg);
+        }
+        if(pages.haspreviouspage){
+            const newpg2=document.createElement("a")
+            newpg2.setAttribute("class","page")
+            newpg2.setAttribute("id",`${pages.previouspage}`)
+            newpg2.innerText=`${pages.previouspage}`
+            pagenation.appendChild(newpg2);
+        }
+       
+        const newpg1=document.createElement("a")
+        newpg1.setAttribute("id",`${pages.currentpage}`)
+        newpg1.setAttribute("class","page")
+        newpg1.innerText=`${pages.currentpage}`
+        pagenation.appendChild(newpg1)
+        
+        if(pages.hasnextpage){
+            const newpg3=document.createElement("a")
+            newpg3.setAttribute("class","page")
+            newpg3.setAttribute("id",`${pages.nextpage}`)
+            newpg3.innerText=`${pages.nextpage}`
+            pagenation.appendChild(newpg3);
+        }
+        if(pages.lastpage !== pages.currentpage && pages.nextpage!==pages.lastpage){
+            const newpg4=document.createElement("a")
+            newpg4.setAttribute("class","page")
+            newpg4.setAttribute("id",`${pages.lastpage}`)
+            newpg4.innerText=`${pages.lastpage}`
+            pagenation.appendChild(newpg4);
+        }
     }
+    
 )
 
 function addToCart(prodId) {

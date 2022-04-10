@@ -304,3 +304,22 @@ header .play-btn{
     margin: auto;
     display: flex;
 }
+
+.pagenation
+{
+    margin-top: 2rem;
+    text-align: center;
+}
+.pagenation a{
+    text-decoration:none;
+    color: #56CCF2;
+    padding: 0.5rem;
+    border:1px solid #56CCF2;
+    border-radius: 1px;
+    margin:0 1rem;
+}
+.pagenation a:hover,
+.pagenation a:active{
+    background-color: #56CCF2;
+    color: white;
+}

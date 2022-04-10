@@ -6,45 +6,12 @@ Ecommerce.addEventListener( 'click' , (e) => {
 
     if(e.target.className == 'add-cart') {
         const id = e.target.parentNode.parentNode.id;
-        const name = document.querySelector(`#${id} h3`).innerText;
-        const img_src = document.querySelector(`#${id} img`).src;
-        const price = e.target.parentNode.firstElementChild.firstElementChild.innerText;
+        addToCart(id);
 
-        let cart_total = document.querySelector('#total-value').innerText;
-
-        if(document.querySelector(`#incart${id}`)){
-            alert('Already Added to cart');
-            return;
-        } else {
-            document.querySelector('.cartnumber').innerText = parseInt(document.querySelector('.cartnumber').innerText) + 1;
-            const cart_item = document.createElement('div');
-            cart_item.classList.add('cart-row');
-            cart_item.setAttribute('id' , `inCart${id}`);
-            cart_total = (parseFloat(cart_total) + parseFloat(price)).toFixed(2);
-
-            document.querySelector('#total-value').innerText = `${cart_total}`;
-            
-            cart_item.innerHTML = `<span class='cart-item cart-column'><img class='cart-img' src="${img_src}" alt="">
-                <span>${name}</span></span>
-                <span class='cart-price cart-column'>${price}</span><span class='cart-quantity cart-column'>
-                <input type="text" value="1"><button>REMOVE</button></span>`
-
-            cart_items.appendChild(cart_item);
-            }
-
-            const container = document.getElementById('container');
-            const notification = document.createElement('div');
-            notification.classList.add('notification');
-            notification.innerHTML = `<h4> ${name} is added to the cart<h4>`;
-            container.appendChild(notification);
-
-            setTimeout( () => {
-                notification.remove();
-            }, 2500)
         }
 
             if (e.target.className=='cart-btn-bottom' || e.target.className=='cart-bottom' || e.target.className=='cart-btn'){
-                console.log("Hi");
+                getCart();
                 document.querySelector('#cart').style = "display:block;"
             }
             if (e.target.className=='cancel'){
@@ -86,3 +53,102 @@ window.addEventListener('DOMContentLoaded' , async () => {
     }
     }
 )
+
+function addToCart(prodId) {
+    console.log("hi", prodId);
+    axios.post("http://localhost:3000/cart" , {productId: prodId})
+    .then( (res) => {
+        if(res.status == 200){
+            notifyUsers(res.data.message);
+        } else { throw new Error();}
+    })
+    .catch( (err) => console.log(err));
+    
+}
+
+function getCart() {
+    let cart_total=0;
+    cart_items.innerHTML="";
+    axios.get('http://localhost:3000/cart')
+    .then( (prods) => {
+        console.log(prods.data.products);
+        for(let i=0; i< prods.data.products.length ; i++){
+
+        const cart_item = document.createElement('div');
+        cart_item.classList.add('cart-row');
+        cart_item.setAttribute('id' , `inCart${prods.data.products[i].id}`);
+        cart_total = cart_total + prods.data.products[i].price;
+
+        document.querySelector('#total-value').innerText = `${cart_total}`;
+        
+        cart_item.innerHTML = `<span class='cart-item cart-column'><img class='cart-img' src="${prods.data.products[i].imageUrl}" alt="">
+            <span>${prods.data.products[i].title}</span></span>
+            <span class='cart-price cart-column'>${prods.data.products[i].price}</span><span class='cart-quantity cart-column'>
+            <input type="text" value="1"><button>REMOVE</button></span>`
+
+        cart_items.appendChild(cart_item);
+        }
+
+    })
+}
+
+function notifyUsers (message) {
+            const container = document.getElementById('container');
+            const notification = document.createElement('div');
+            notification.classList.add('notification');
+            notification.innerHTML = `<h4> ${message} <h4>`;
+            container.appendChild(notification);
+
+            setTimeout( () => {
+                notification.remove();
+            }, 2500)
+}
+
+function garbage () {
+    const id = e.target.parentNode.parentNode.id;
+    addToCart(id);
+    axios.get('http://localhost:3000/cart')
+    .then( (prods) => {
+        console.log(prods.data.products[0].id);
+        const cart_item = document.createElement('div');
+        cart_item.classList.add('cart-row');
+        cart_item.setAttribute('id' , `inCart${prods.data.products[0].id}`);
+        cart_total = (parseFloat(cart_total) + parseFloat(price)).toFixed(2);
+
+        document.querySelector('#total-value').innerText = `${cart_total}`;
+        
+        cart_item.innerHTML = `<span class='cart-item cart-column'><img class='cart-img' src="${prods.data.products[0].imageUrl}" alt="">
+            <span>${prods.data.products[0].title}</span></span>
+            <span class='cart-price cart-column'>${prods.data.products[0].price}</span><span class='cart-quantity cart-column'>
+            <input type="text" value="1"><button>REMOVE</button></span>`
+
+        cart_items.appendChild(cart_item);
+
+    })
+
+    // const name = document.querySelector(`#${id} h3`).innerText;
+    // const img_src = document.querySelector(`#${id} img`).src;
+    const price = e.target.parentNode.firstElementChild.firstElementChild.innerText;
+
+    let cart_total = document.querySelector('#total-value').innerText;
+
+    // if(document.querySelector(`#incart${id}`)){
+    //     alert('Already Added to cart');
+    //     return;
+    // } else {
+        document.querySelector('.cartnumber').innerText = parseInt(document.querySelector('.cartnumber').innerText) + 1;
+        // const cart_item = document.createElement('div');
+        // cart_item.classList.add('cart-row');
+        // cart_item.setAttribute('id' , `inCart${products.data.products[products.length-1].id}`);
+        // cart_total = (parseFloat(cart_total) + parseFloat(price)).toFixed(2);
+
+        // document.querySelector('#total-value').innerText = `${cart_total}`;
+        
+        // cart_item.innerHTML = `<span class='cart-item cart-column'><img class='cart-img' src="${products.data.products[products.length-1].imageUrl}" alt="">
+        //     <span>${products.data.products[products.length-1].title}</span></span>
+        //     <span class='cart-price cart-column'>${products.data.products[products.length-1].price}</span><span class='cart-quantity cart-column'>
+        //     <input type="text" value="1"><button>REMOVE</button></span>`
+
+        // cart_items.appendChild(cart_item);
+        //}
+}

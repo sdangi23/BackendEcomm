@@ -34,7 +34,8 @@ app.use((req, res, next) => {
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded( {extended: false} ));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/admin', adminRoutes);
@@ -59,7 +60,7 @@ sequelize
   })
   .then(user => {
     if (!user) {
-      return User.create({ name: 'Max', email: 'test@test.com' });
+      return User.create({ name: 'Shubham', email: 'shubham@test.com' });
     }
     return user;
   })

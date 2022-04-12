@@ -323,3 +323,23 @@ header .play-btn{
     background-color: #56CCF2;
     color: white;
 }
+
+.order {
+    padding:8px;
+    color:white;
+    border:none;
+    font-size:15px;
+    font-weight: bold;
+    border-radius: 10%;
+    background: #56CCF2;
+    align-self: flex-end;
+}
+
+.order-span {
+    width: 100%;
+    background: #56CCF2;
+    margin: auto;
+    border: 0;
+    font-weight: bold;
+    font-size: 20px;
+}

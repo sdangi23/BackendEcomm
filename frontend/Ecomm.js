@@ -25,6 +25,7 @@ Ecommerce.addEventListener( 'click' , (e) => {
                 document.querySelector('#total-value').innerText = `${cart_total.toFixed(2)}`
                 e.target.parentNode.parentNode.remove()
             }
+            
     
 })
 
@@ -53,6 +54,12 @@ window.addEventListener('DOMContentLoaded' , async () => {
     }
     }
 )
+
+async function getOrderHistory(){
+    const orderList = await axios.get('http://localhost:3000/order');
+
+
+}
 
 function placeOrder(){
     axios.post('http://localhost:3000/order')

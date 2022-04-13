@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart');
+const Order = require('../models/order');
 
 exports.getProducts = (req, res, next) => {
   Product.findAll()
@@ -46,7 +47,6 @@ exports.getCart = (req, res, next) => {
       return cart
         .getProducts()
         .then(products => {
-          //console.log(product.cartItem.quantity , "--------------------");
           res.status(200).json( {success: true , products: products } )
           // res.render('shop/cart', {
           // path: '/cart',
@@ -60,7 +60,6 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   // const prodId = req.body.productId;
-  // console.log("hi Again" , prodId);
   // let fetchedCart;
   // let newQuantity = 1;
   
@@ -75,7 +74,6 @@ exports.postCart = (req, res, next) => {
   //     if (products.length > 0) {
   //       product = products[0];
   //     }
-  //     console.log("JASCJHA HAKJD KAJSDH AJSDH " , product);
   //     if (product) {
   //       const oldQuantity = product.cartItem.quantity;
   //       newQuantity = oldQuantity + 1;
@@ -117,7 +115,6 @@ exports.postCart = (req, res, next) => {
       return Product.findByPk(prodId);
     })
     .then(product => {
-      //console.log("JASCJHA HAKJD KAJSDH AJSDH " , products);
       return fetchedCart.addProduct(product, {
         through: { quantity: newQuantity }
       });
@@ -135,15 +132,13 @@ exports.postCartDeleteProduct = (req, res, next) => {
   req.user
     .getCart()
     .then(cart => {
-      console.log("HUlalkdkjasdas dkjhasdhaskjdaskdhasjkdhahskd hasg dkha d" , cart);
-      return cart.getProducts({ where: { id: prodId } });
+       return cart.getProducts({ where: { id: prodId } });
     })
     .then(products => {
       const product = products[0];
       return product.cartItem.destroy();
     })
     .then(result => {
-      console.log("HUlalkdkjasdas dkjhasdhaskjdaskdhasjkdhahskd hasg dkha d");
       res.redirect('/cart');
     })
     .catch(err => console.log(err));
@@ -167,11 +162,28 @@ exports.postOrder = async (req, res, next) => {
     res.status(500).json({err: err})
   }}
 
-exports.getOrders = (req, res, next) => {
-  res.render('shop/orders', {
-    path: '/orders',
-    pageTitle: 'Your Orders'
-  });
+exports.getOrders =async (req, res, next) => {
+  try{
+    const data = [];
+    const orderArray = await req.user.getOrders();
+    await Promise.all(orderArray.map( async (eachOrder) => {
+      const eachOrderDetail = {};
+      eachOrderDetail.orderId = eachOrder.id;
+      const ord = await Order.findByPk(eachOrder.id);
+      const orderedProducts = await ord.getProducts();
+      const orderedProductsFiltered = [];
+      orderedProducts.map( item => {
+        orderedProductsFiltered.push(item.dataValues);
+      })
+      eachOrderDetail.products = orderedProductsFiltered;
+      data.push(eachOrderDetail);
+      
+
+    }))
+    res.status(201).json( {data} )
+  } catch(err) {
+    res.status(500).json({err: err})
+  }
 };
 
 exports.getCheckout = (req, res, next) => {

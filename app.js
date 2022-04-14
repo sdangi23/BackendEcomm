@@ -5,6 +5,12 @@ const bodyParser = require('body-parser');
 
 const errorController = require('./controllers/error');
 
+const app = express();
+
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const sequelize = require('./util/database');
 
 const Product = require('./models/product');
@@ -15,9 +21,6 @@ const Order = require('./models/order');
 const OrderItem = require('./models/order-item');
 
 var cors = require('cors');
-
-
-const app = express();
 
 app.use(cors());
 
@@ -58,8 +61,8 @@ Order.belongsToMany(Product, {through: OrderItem});
 Product.belongsToMany(Order, {through: OrderItem});
 
 sequelize
-  //.sync({ alter: true })
-  .sync()
+  .sync({ alter: true })
+  //.sync()
   .then(result => {
     return User.findByPk(1);
     // console.log(result);

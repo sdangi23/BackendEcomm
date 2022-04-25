@@ -48,6 +48,10 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname , `frontend/Ecomm.html`));
+})
+
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product);
 User.hasOne(Cart);

@@ -30,7 +30,7 @@ Ecommerce.addEventListener( 'click' , (e) => {
 })
 
 window.addEventListener('DOMContentLoaded' , async () => {
-    const db = await axios.get('http://localhost:3000/products');
+    const db = await axios.get('54.163.141.94:3000/products');
 
     const albums = document.getElementById('albums');
     let r=1;
@@ -56,13 +56,13 @@ window.addEventListener('DOMContentLoaded' , async () => {
 )
 
 async function getOrderHistory(){
-    const orderList = await axios.get('http://localhost:3000/order');
+    const orderList = await axios.get('54.163.141.94:3000/order');
 
 
 }
 
 function placeOrder(){
-    axios.post('http://localhost:3000/order')
+    axios.post('54.163.141.94:3000/order')
     .then( (res) => {
         notifyUsers(`Your Order is SuccessFully Placed Order Id is ${res.data.orderId}`);
     })
@@ -71,7 +71,7 @@ function placeOrder(){
 
 function addToCart(prodId) {
     console.log("hi", prodId);
-    axios.post("http://localhost:3000/cart" , {productId: prodId})
+    axios.post("54.163.141.94:3000/cart" , {productId: prodId})
     .then( (res) => {
         if(res.status == 200){
             notifyUsers(res.data.message);
@@ -84,7 +84,7 @@ function addToCart(prodId) {
 function getCart() {
     let cart_total=0;
     cart_items.innerHTML="";
-    axios.get('http://localhost:3000/cart')
+    axios.get('54.163.141.94:3000/cart')
     .then( (prods) => {
         console.log(prods.data.products);
         for(let i=0; i< prods.data.products.length ; i++){
@@ -122,7 +122,7 @@ function notifyUsers (message) {
 function garbage () {
     const id = e.target.parentNode.parentNode.id;
     addToCart(id);
-    axios.get('http://localhost:3000/cart')
+    axios.get('54.163.141.94:3000/cart')
     .then( (prods) => {
         console.log(prods.data.products[0].id);
         const cart_item = document.createElement('div');
